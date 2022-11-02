@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "rq-demo"
+version = "0.1.0"
+description = ""
+authors = ["Timur Gain <timur.gain@gmail.com>"]
+readme = "README.md"
+packages = [{include = "rq_demo"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+flake8 = "^5.0.4"
+flask = "^2.2.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
