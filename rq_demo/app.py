@@ -3,7 +3,7 @@
 
 import time
 import requests
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from flask import Flask
 from flask import render_template
@@ -65,7 +65,7 @@ def start_low_tasks():
             f=any_task, kwargs={'secunds': 1, 'word': 'education'}
         )
         time.sleep(hit_delay)
-    return '<p>Low priority tasks are queued</p>'
+    return render_template('index.html')
 
 
 # 7.2 Постановка задачи в очередь с Default приоритетом
@@ -76,7 +76,7 @@ def start_default_tasks():
     for hit in range(hits):
         queue_default.enqueue(f=any_task, args=(2, 'improvisation'))
         time.sleep(hit_delay)
-    return '<p>Default priority tasks are queued</p>'
+    return render_template('index.html')
 
 
 # 7.3 Постановка задачи в очередь с High приоритетом
@@ -87,7 +87,7 @@ def start_high_tasks():
     for hit in range(hits):
         queue_high.enqueue(any_task, 2, 'procrastination', job_timeout=4)
         time.sleep(hit_delay)
-    return '<p>High priority tasks are queued</p>'
+    return render_template('index.html')
 
 
 def any_task(secunds: int, word: str) -> int:
@@ -106,7 +106,7 @@ def retry_failed_tasks():
             failed_task, 67, retry=Retry(max=3, interval=[3, 5, 7])
         )
         time.sleep(hit_delay)
-    return '<p>Retrying failed tasks</p>'
+    return render_template('index.html')
 
 
 def failed_task(num: int):
@@ -120,7 +120,7 @@ def failed_task(num: int):
 def empty_queues():
     for queue in queues:
         queue.empty()
-    return '<p>Queues are emptied</p>'
+    return render_template('index.html')
 
 
 @app.route('/empty-failed/')
@@ -129,15 +129,15 @@ def empty_failed():
         failed_registry = registry.FailedJobRegistry(queue=queue)
         for job_id in failed_registry.get_job_ids():
             failed_registry.remove(job_id, delete_job=True)
-    return '<p>Failed registry are emptied</p>'
+    return render_template('index.html')
 
 
 # 10. Демонстрация плановых задач, например, сходить за погодой в Гааге
 
-@app.route('/schedule-task/')
-def schedule_task():
-    queue_low.enqueue_in(timedelta(seconds=600), get_weather, 'Hague')
-    return '<p>Task is scheduled</p>'
+@app.route('/start-scheduled-task/')
+def start_scheduled_task():
+    queue_low.enqueue_in(timedelta(seconds=120), get_weather, 'Hague')
+    return render_template('index.html')
 
 
 def get_weather(city: str):
@@ -150,7 +150,7 @@ def get_weather(city: str):
         print('Something went wrong')
 
 
-@app.route('/schedule-list/')
+@app.route('/get-scheduled-list/')
 def get_scheduled_list() -> str:
     schedule_list = '<p>Scheduled job list:</p>'
     for queue in queues:
@@ -163,10 +163,10 @@ def get_scheduled_list() -> str:
     return schedule_list
 
 
-@app.route('/empty-schedule-list/')
-def empty_schedule_list():
+@app.route('/empty-scheduled-list/')
+def empty_scheduled_list():
     for queue in queues:
         scheduled_registry = registry.ScheduledJobRegistry(queue=queue)
         for job_id in scheduled_registry.get_job_ids():
             scheduled_registry.remove(job_id, delete_job=True)
-    return '<p>Scheduled registry are emptied</p>'
+    return render_template('index.html')

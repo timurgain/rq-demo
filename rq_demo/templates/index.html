@@ -16,66 +16,80 @@
       <h2>Load task queues</h2>
       <ul>
         <li>
-          <a href="http://127.0.0.1:5000/start-low-tasks/"
-            target="_blank">Low priority task queue</a>
+          <form action="http://127.0.0.1:5000/start-low-tasks/"
+                method="get">
+            <button type="submit">Low priority</button>
+          </form>
         </li>
         <li>
-          <a href="http://127.0.0.1:5000/start-default-tasks/"
-            target="_blank">Default priority task queue</a>
+          <form action="http://127.0.0.1:5000/start-default-tasks/"
+                method="get">
+            <button type="submit">Default priority</button>
+          </form>
         </li>
         <li>
-          <a href="http://127.0.0.1:5000/start-high-tasks/"
-            target="_blank">High priority task queue</a>
+          <form action="http://127.0.0.1:5000/start-high-tasks/"
+                method="get">
+            <button type="submit">High priority</button>
+          </form>
+        </li>
+        <li>          
+          <form action="http://127.0.0.1:5000/retry-failed-tasks/"
+                method="get">
+            <button type="submit">Failed tasks and retry</button>
+          </form>
+        </li>
+        <li>
+          <form action="http://127.0.0.1:5000/start-scheduled-task/"
+                method="get">
+            <button type="submit">Schedule task</button>
+          </form>
         </li>
       </ul>
     </section>
 
     <section>
-      <h2>Load default queue with possibly failure tasks</h2>
-      <p><a href="http://127.0.0.1:5000/retry-failed-tasks/"
-            target="_blank">Failure tasks</a></p>
+      <h2>Empty queues and registries</h2>
+      <ul>
+        <li>
+          <form action="http://127.0.0.1:5000/empty-queues/"
+                method="get">
+            <button type="submit">Empty queues</button>
+          </form>
+        </li>
+        <li>
+          <form action="http://127.0.0.1:5000/empty-failed/"
+                method="get">
+            <button type="submit">Empty failed</button>
+          </form>
+        </li>
+        <li>
+          <form action="http://127.0.0.1:5000/empty-scheduled-list/"
+                method="get">
+            <button type="submit">Empty scheduled</button>
+          </form>
+        </li>
+      </ul>
     </section>
 
     <section>
-      <h2>Emptying queues</h2>
-      <p><a href="http://127.0.0.1:5000/empty-queues/"
-            target="_blank">Empty queues</a></p>
+      <h2>Monitoring queues and scheduled tasks</h2>
+      <ul>
+        <li>
+          <a href="http://127.0.0.1:5000/rq/"
+             target="_blank">Go to monitoring</a>
+        </li>
+        <li>
+          <a href="http://127.0.0.1:5000/get-scheduled-list/"
+             target="_blank">Go to scheduled tasks</a>
+        </li>
+      </ul>
     </section>
-
-    <section>
-      <h2>Emptying failed</h2>
-      <p><a href="http://127.0.0.1:5000/empty-failed/"
-            target="_blank">Empty failed</a></p>
-    </section>
-
-    <section>
-      <h2>Schedule task</h2>
-      <p><a href="http://127.0.0.1:5000/schedule-task/"
-        target="_blank">Schedule task</a></p>
-    </section>
-
-    <section>
-      <h2>Emptying scheduled</h2>
-      <p><a href="http://127.0.0.1:5000/empty-schedule-list/"
-            target="_blank">Empty scheduled</a></p>
-    </section>
-
-    <section>
-      <h2>Monitoring queues</h2>
-      <p><a href="http://127.0.0.1:5000/rq/"
-        target="_blank">Go to monitoring</a></p>
-    </section>
-
-    <section>
-      <h2>Monitoring scheduled tasks</h2>
-      <p><a href="http://127.0.0.1:5000/schedule-list/"
-        target="_blank">Go to scheduled tasks</a></p>
-    </section>
-
   </main>
 
-</body>
-<footer>
+  <footer>
     <p>Timur Gain, nov 2022</p>
-</footer>
+  </footer>
+
+</body>
 </html>
