@@ -57,10 +57,10 @@ def index():
 
 # 7.1 Постановка задачи в очередь с Low приоритетом
 @app.route('/start-low-tasks/')
-def start_low_tasks():
+def start_low_tasks() -> str:
     hits = 30
     hit_delay = 0
-    for hit in range(hits):
+    for _ in range(hits):
         queue_low.enqueue(
             f=any_task, kwargs={'secunds': 1, 'word': 'education'}
         )
@@ -70,10 +70,10 @@ def start_low_tasks():
 
 # 7.2 Постановка задачи в очередь с Default приоритетом
 @app.route('/start-default-tasks/')
-def start_default_tasks():
+def start_default_tasks() -> str:
     hits = 10
     hit_delay = 3
-    for hit in range(hits):
+    for _ in range(hits):
         queue_default.enqueue(f=any_task, args=(2, 'improvisation'))
         time.sleep(hit_delay)
     return render_template('index.html')
@@ -81,10 +81,10 @@ def start_default_tasks():
 
 # 7.3 Постановка задачи в очередь с High приоритетом
 @app.route('/start-high-tasks/')
-def start_high_tasks():
+def start_high_tasks() -> str:
     hits = 10
     hit_delay = 1
-    for hit in range(hits):
+    for _ in range(hits):
         queue_high.enqueue(any_task, 2, 'procrastination', job_timeout=4)
         time.sleep(hit_delay)
     return render_template('index.html')
@@ -98,10 +98,10 @@ def any_task(secunds: int, word: str) -> int:
 # 8. Передача задачи в очередь с перепостановкой в случае неудачи
 
 @app.route('/retry-failed-tasks/')
-def retry_failed_tasks():
+def retry_failed_tasks() -> str:
     hits = 10
     hit_delay = 0
-    for hit in range(hits):
+    for _ in range(hits):
         queue_default.enqueue(
             failed_task, 67, retry=Retry(max=3, interval=[3, 5, 7])
         )
@@ -109,7 +109,7 @@ def retry_failed_tasks():
     return render_template('index.html')
 
 
-def failed_task(num: int):
+def failed_task(num: int) -> ZeroDivisionError:
     time.sleep(2)
     return num / 0
 
@@ -117,14 +117,14 @@ def failed_task(num: int):
 # 9. Очистка очередей и списка Failed
 
 @app.route('/empty-queues/')
-def empty_queues():
+def empty_queues() -> str:
     for queue in queues:
         queue.empty()
     return render_template('index.html')
 
 
 @app.route('/empty-failed/')
-def empty_failed():
+def empty_failed() -> str:
     for queue in queues:
         failed_registry = registry.FailedJobRegistry(queue=queue)
         for job_id in failed_registry.get_job_ids():
@@ -135,12 +135,12 @@ def empty_failed():
 # 10. Демонстрация плановых задач, например, сходить за погодой в Гааге
 
 @app.route('/start-scheduled-task/')
-def start_scheduled_task():
+def start_scheduled_task() -> str:
     queue_low.enqueue_in(timedelta(seconds=120), get_weather, 'Hague')
     return render_template('index.html')
 
 
-def get_weather(city: str):
+def get_weather(city: str) -> str:
     url = f'http://wttr.in/{city}'
     wttr_params = {'format': 3}
     try:
@@ -164,7 +164,7 @@ def get_scheduled_list() -> str:
 
 
 @app.route('/empty-scheduled-list/')
-def empty_scheduled_list():
+def empty_scheduled_list() -> str:
     for queue in queues:
         scheduled_registry = registry.ScheduledJobRegistry(queue=queue)
         for job_id in scheduled_registry.get_job_ids():
