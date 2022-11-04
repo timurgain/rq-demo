@@ -29,6 +29,7 @@ app.register_blueprint(rq_dashboard.blueprint, url_prefix="/rq")
 redis_q = Redis()
 
 # 5. Описываем очереди с разным приоритетом выполнения
+
 # Сообщения с job из очередей публикуются в Redis, в нашем канале redis_q
 # Приоритет зависит от порядка описания очереди, а не от ее имени
 queue_high = Queue('high', connection=redis_q)
@@ -37,22 +38,21 @@ queue_low = Queue('low', connection=redis_q)
 queues = (queue_high, queue_default, queue_low)
 
 # 6. Запустить worker и подписать его на канал в Redis
-# запуск из папки с проектом, предполагаю так воркер находит канал redis_q
+
+# терминал из папки с проектом, предполагаю так воркер находит канал redis_q
+# (for MacOS users + requests lib + rq): export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 # rq worker high default low --with-scheduler (для Retry и плановых задач)
+
 # Можно запустить программно, но как-то отдельно
 # worker = Worker(queues=queues, connection=redis_q)
 # worker.work(with_scheduler=True)
 
 
 # 7. Имитация обращений к приложению, ендпоинты привязываем к очередям
+
 @app.route('/')
 def index():
     return render_template('index.html')
-
-
-def any_task(secunds: int, word: str) -> int:
-    time.sleep(secunds)
-    return len(word)
 
 
 # 7.1 Постановка задачи в очередь с Low приоритетом
@@ -90,12 +90,12 @@ def start_high_tasks():
     return '<p>High priority tasks are queued</p>'
 
 
+def any_task(secunds: int, word: str) -> int:
+    time.sleep(secunds)
+    return len(word)
+
+
 # 8. Передача задачи в очередь с перепостановкой в случае неудачи
-
-def failed_task(num: int):
-    time.sleep(2)
-    return num / 0
-
 
 @app.route('/retry-failed-tasks/')
 def retry_failed_tasks():
@@ -107,6 +107,11 @@ def retry_failed_tasks():
         )
         time.sleep(hit_delay)
     return '<p>Retrying failed tasks</p>'
+
+
+def failed_task(num: int):
+    time.sleep(2)
+    return num / 0
 
 
 # 9. Очистка очередей и списка Failed
@@ -127,25 +132,41 @@ def empty_failed():
     return '<p>Failed registry are emptied</p>'
 
 
-# 10. Демонстрация плановых задач
-
-def what_weather(city: str) -> str:
-    url = f'http://wttr.in/{city}'
-    weather_parameters = {
-        'format': 2,
-        'M': ''
-    }
-    try:
-        response = requests.get(url, params=weather_parameters)
-    except requests.ConnectionError:
-        return '<сетевая ошибка>'
-    if response.status_code == 200:
-        return response.text.strip()
-    else:
-        return '<ошибка на сервере погоды>'
-
+# 10. Демонстрация плановых задач, например, сходить за погодой в Гааге
 
 @app.route('/schedule-task/')
 def schedule_task():
-    queue_low.enqueue_in(timedelta(seconds=10), any_task, 5, 'Moscow')
+    queue_low.enqueue_in(timedelta(seconds=600), get_weather, 'Hague')
     return '<p>Task is scheduled</p>'
+
+
+def get_weather(city: str):
+    url = f'http://wttr.in/{city}'
+    wttr_params = {'format': 3}
+    try:
+        response = requests.get(url, params=wttr_params)
+        print(response.text.strip())
+    except Exception:
+        print('Something went wrong')
+
+
+@app.route('/schedule-list/')
+def get_scheduled_list() -> str:
+    schedule_list = '<p>Scheduled job list:</p>'
+    for queue in queues:
+        scheduled_registry = registry.ScheduledJobRegistry(queue=queue)
+        for job_id in scheduled_registry.get_job_ids():
+            scheduled_time = scheduled_registry.get_scheduled_time(job_id)
+            job = queue.fetch_job(job_id)
+            schedule_list += (f'<p>{job.origin} queue - {job.get_status()} on'
+                              f' {scheduled_time} - {job.description}</p>')
+    return schedule_list
+
+
+@app.route('/empty-schedule-list/')
+def empty_schedule_list():
+    for queue in queues:
+        scheduled_registry = registry.ScheduledJobRegistry(queue=queue)
+        for job_id in scheduled_registry.get_job_ids():
+            scheduled_registry.remove(job_id, delete_job=True)
+    return '<p>Scheduled registry are emptied</p>'
