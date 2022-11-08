@@ -56,7 +56,7 @@ def index():
 # 7.1 Постановка задачи в очередь с Low приоритетом
 @app.route('/start-low-tasks/')
 def start_low_tasks() -> str:
-    hits = 30
+    hits = 10
     hit_delay = 0
     for _ in range(hits):
         queue_low.enqueue(
@@ -70,7 +70,7 @@ def start_low_tasks() -> str:
 @app.route('/start-default-tasks/')
 def start_default_tasks() -> str:
     hits = 10
-    hit_delay = 3
+    hit_delay = 0
     for _ in range(hits):
         queue_default.enqueue(f=any_task, args=(2, 'improvisation'))
         time.sleep(hit_delay)
@@ -81,7 +81,7 @@ def start_default_tasks() -> str:
 @app.route('/start-high-tasks/')
 def start_high_tasks() -> str:
     hits = 10
-    hit_delay = 1
+    hit_delay = 0
     for _ in range(hits):
         queue_high.enqueue(any_task, 2, 'procrastination', job_timeout=4)
         time.sleep(hit_delay)
@@ -97,7 +97,7 @@ def any_task(secunds: int, word: str) -> int:
 
 @app.route('/retry-failed-tasks/')
 def retry_failed_tasks() -> str:
-    hits = 10
+    hits = 5
     hit_delay = 0
     for _ in range(hits):
         queue_default.enqueue(
