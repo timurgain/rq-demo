@@ -130,11 +130,11 @@ def empty_failed() -> str:
     return render_template('index.html')
 
 
-# 10. Демонстрация плановых задач, например, сходить за погодой в Гааге
+# 10. Демонстрация плановых задач, например, сходить за погодой
 
 @app.route('/start-scheduled-task/')
 def start_scheduled_task() -> str:
-    queue_low.enqueue_in(timedelta(seconds=120), get_weather, 'Hague')
+    queue_low.enqueue_in(timedelta(seconds=20), get_weather, 'Hague')
     return render_template('index.html')
 
 
