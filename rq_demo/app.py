@@ -22,17 +22,19 @@ app.register_blueprint(rq_dashboard.blueprint, url_prefix="/rq")
 # redis-server
 # redis-cli ping
 
-# 4. Создаем связь с Redis (вроде канала)
+# 4. Создаём связь с Redis (вроде канала)
 redis_q = Redis()
 
 # 5. Описываем очереди с разным приоритетом выполнения
 
 # Сообщения с job из очередей публикуются в Redis, в нашем канале redis_q
-# Приоритет зависит от порядка описания очереди, а не от ее имени
+# Приоритет зависит от порядка описания очереди, а не от ее имени.
+
 queue_high = Queue('high', connection=redis_q)
 queue_default = Queue('default', connection=redis_q)
 queue_low = Queue('low', connection=redis_q)
 queues = (queue_high, queue_default, queue_low)
+
 
 # 6. Запустить worker и подписать его на канал в Redis
 
@@ -60,7 +62,7 @@ def start_low_tasks() -> str:
     hit_delay = 0
     for _ in range(hits):
         queue_low.enqueue(
-            f=any_task, kwargs={'secunds': 1, 'word': 'education'}
+            f=any_task, kwargs={'seconds': 1, 'word': 'education'}
         )
         time.sleep(hit_delay)
     return render_template('index.html')
@@ -88,8 +90,8 @@ def start_high_tasks() -> str:
     return render_template('index.html')
 
 
-def any_task(secunds: int, word: str) -> int:
-    time.sleep(secunds)
+def any_task(seconds: int, word: str) -> int:
+    time.sleep(seconds)
     return len(word)
 
 
@@ -138,14 +140,14 @@ def start_scheduled_task() -> str:
     return render_template('index.html')
 
 
-def get_weather(city: str) -> str:
-    url = f'http://wttr.in/{city}'
+def get_weather(city: str) -> None:
+    url = f'https://wttr.in/{city}'
     wttr_params = {'format': 3}
     try:
         response = requests.get(url, params=wttr_params)
         print(response.text.strip())
-    except Exception:
-        print('Something went wrong')
+    except Exception as _e:
+        print(f'Something went wrong, error is {_e}')
 
 
 @app.route('/get-scheduled-list/')
@@ -168,3 +170,7 @@ def empty_scheduled_list() -> str:
         for job_id in scheduled_registry.get_job_ids():
             scheduled_registry.remove(job_id, delete_job=True)
     return render_template('index.html')
+
+
+if __name__ == '__main__':
+    app.run()
