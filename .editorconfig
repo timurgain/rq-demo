@@ -1,6 +1,17 @@
-[.html]
+# A special property that should be specified at the top of the file outside of
+# any sections. Set to true to stop .editor config file search on current file
+root = true
+
+[*]
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+end_of_line = lf
+# Possible values - tab, space
+indent_style = space
+
+[*.{html,css}]
 indent_size = 2
 
 [.py]
 indent_size = 4
-

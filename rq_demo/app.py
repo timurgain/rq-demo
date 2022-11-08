@@ -2,16 +2,13 @@
 # запуск виртуального окружения, подтянуть Flask, rq, rq-dashboard, requests
 
 import time
-import requests
 from datetime import timedelta
 
-from flask import Flask
-from flask import render_template
-
-from redis import Redis
-
-from rq import Queue, Retry, registry
+import requests
 import rq_dashboard
+from flask import Flask, render_template
+from redis import Redis
+from rq import Queue, Retry, registry
 
 # 1. Создаем приложение (экземпляр Flask)
 app = Flask(__name__)
@@ -40,7 +37,8 @@ queues = (queue_high, queue_default, queue_low)
 # 6. Запустить worker и подписать его на канал в Redis
 
 # терминал из папки с проектом, предполагаю так воркер находит канал redis_q
-# (for MacOS users + requests lib + rq): export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
+# for (MacOS users + requests lib + rq) put in a terminal:
+#   export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 # rq worker high default low --with-scheduler (для Retry и плановых задач)
 
 # Можно запустить программно, но как-то отдельно

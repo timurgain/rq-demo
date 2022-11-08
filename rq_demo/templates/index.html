@@ -4,91 +4,98 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Redis Queue demo">
+  <link rel="stylesheet" href="./pages/index.css">
   <title>Redis Queue demo, Timur Gain</title>
 </head>
-<body>
-  <header>
-    <h1>Redis Queue demo</h1>
-  </header>
-  
-  <main>
-    <section>
-      <h2>Load task queues</h2>
-      <ul>
-        <li>
-          <form action="http://127.0.0.1:5000/start-low-tasks/"
-                method="get">
-            <button type="submit">Low priority</button>
-          </form>
-        </li>
-        <li>
-          <form action="http://127.0.0.1:5000/start-default-tasks/"
-                method="get">
-            <button type="submit">Default priority</button>
-          </form>
-        </li>
-        <li>
-          <form action="http://127.0.0.1:5000/start-high-tasks/"
-                method="get">
-            <button type="submit">High priority</button>
-          </form>
-        </li>
-        <li>          
-          <form action="http://127.0.0.1:5000/retry-failed-tasks/"
-                method="get">
-            <button type="submit">Failed tasks and retry</button>
-          </form>
-        </li>
-        <li>
-          <form action="http://127.0.0.1:5000/start-scheduled-task/"
-                method="get">
-            <button type="submit">Schedule task</button>
-          </form>
-        </li>
-      </ul>
-    </section>
 
-    <section>
-      <h2>Empty queues and registries</h2>
-      <ul>
-        <li>
-          <form action="http://127.0.0.1:5000/empty-queues/"
-                method="get">
-            <button type="submit">Empty queues</button>
-          </form>
-        </li>
-        <li>
-          <form action="http://127.0.0.1:5000/empty-failed/"
-                method="get">
-            <button type="submit">Empty failed</button>
-          </form>
-        </li>
-        <li>
-          <form action="http://127.0.0.1:5000/empty-scheduled-list/"
-                method="get">
-            <button type="submit">Empty scheduled</button>
-          </form>
-        </li>
-      </ul>
-    </section>
+<body class="page">
+  <div class="page__paper">
 
-    <section>
-      <h2>Monitoring queues and scheduled tasks</h2>
-      <ul>
-        <li>
-          <a href="http://127.0.0.1:5000/rq/"
-             target="_blank">Go to monitoring</a>
-        </li>
-        <li>
-          <a href="http://127.0.0.1:5000/get-scheduled-list/"
-             target="_blank">Go to scheduled tasks</a>
-        </li>
-      </ul>
-    </section>
-  </main>
+    <header class="header">
+      <h1 class="header__title">Redis Queue demo</h1>
+    </header>
 
-  <footer>
-    <p>Timur Gain, nov 2022</p>
+    <main class="content">
+
+      <section class="section">
+        <h2 class="section__title">Load task queues</h2>
+        <ul class="section__list">
+          <li>
+            <form action="http://127.0.0.1:5000/start-low-tasks/"
+                  method="get">
+              <button class="button" type="submit" onclick="alert('Low')">Low priority</button>
+            </form>
+          </li>
+          <li>
+            <form action="http://127.0.0.1:5000/start-default-tasks/"
+                  method="get">
+              <button class="button" type="submit">Default priority</button>
+            </form>
+          </li>
+          <li>
+            <form action="http://127.0.0.1:5000/start-high-tasks/"
+                  method="get">
+              <button class="button" type="submit">High priority</button>
+            </form>
+          </li>
+          <li>
+            <form action="http://127.0.0.1:5000/retry-failed-tasks/"
+                  method="get">
+              <button class="button" type="submit">Failed tasks and retry</button>
+            </form>
+          </li>
+          <li>
+            <form action="http://127.0.0.1:5000/start-scheduled-task/"
+                  method="get">
+              <button class="button" type="submit">Schedule task</button>
+            </form>
+          </li>
+        </ul>
+      </section>
+
+      <section class="section">
+        <h2 class="section__title">Empty queues and registries</h2>
+        <ul class="section__list">
+          <li>
+            <form action="http://127.0.0.1:5000/empty-queues/"
+                  method="get">
+              <button class="button" type="submit">Empty queues</button>
+            </form>
+          </li>
+          <li>
+            <form action="http://127.0.0.1:5000/empty-failed/"
+                  method="get">
+              <button class="button" type="submit">Empty failed</button>
+            </form>
+          </li>
+          <li>
+            <form action="http://127.0.0.1:5000/empty-scheduled-list/"
+                  method="get">
+              <button class="button" type="submit">Empty scheduled</button>
+            </form>
+          </li>
+        </ul>
+      </section>
+
+      <section class="section">
+        <h2 class="section__title">Monitoring</h2>
+        <ul class="section__list">
+          <li>
+            <a class="link" href="http://127.0.0.1:5000/rq/"
+              target="_blank">Queues</a>
+          </li>
+          <li>
+            <a class="link" href="http://127.0.0.1:5000/get-scheduled-list/"
+              target="_blank">Scheduled tasks</a>
+          </li>
+        </ul>
+      </section>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <p class="footer__paragraph">Timur Gain, nov 2022</p>
   </footer>
 
 </body>
