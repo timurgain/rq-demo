@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "rq-demo"
-version = "0.1.0"
+version = "0.8.0"
 description = ""
 authors = ["Timur Gain <timur.gain@gmail.com>"]
 readme = "README.md"
@@ -8,12 +8,13 @@ packages = [{include = "rq_demo"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-flake8 = "^5.0.4"
 flask = "^2.2.2"
 rq = "^1.11.1"
 rq-dashboard = "^0.6.1"
 requests = "^2.28.1"
 
+[tool.poetry.group.dev.dependencies]
+flake8 = "^5.0.4"
 
 [build-system]
 requires = ["poetry-core"]
