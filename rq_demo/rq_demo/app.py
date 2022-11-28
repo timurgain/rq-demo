@@ -13,20 +13,21 @@ from rq import Queue, Retry, registry
 # 1. Создаем приложение (экземпляр Flask)
 app = Flask(__name__)
 
-# 2. Подключаем мониторинг задач и очередей
-# web или в терминале rq info --interval 1
-app.config.from_object(rq_dashboard.default_settings)
-app.register_blueprint(rq_dashboard.blueprint, url_prefix="/rq")
+# 2. Подключить мониторинг задач и очередей - локально (не docker)
+# есть web-версия или в терминале команда rq info --interval 1
+# app.config.from_object(rq_dashboard.default_settings)
+# app.register_blueprint(rq_dashboard.blueprint, url_prefix="/rq")
 
 # 3. Запустить Redis и проверить через терминал:
 # redis-server
 # redis-cli ping
 
-# 4. Создаем связь с Redis (вроде канала)
-redis_q = Redis()
+# 4. Создаем связь с Redis (вроде канала) - локально или docker
+# 4.1 Если сервер редис крутится локально, используй host='localhost'
+# 4.2 Если сервер редис крутится в докер-контейнере, используй host='ваш_редис'
+redis_q = Redis(host='redis', port=6379)
 
 # 5. Описываем очереди с разным приоритетом выполнения
-
 # Сообщения с job из очередей публикуются в Redis, в нашем канале redis_q
 # Приоритет зависит от порядка описания очереди, а не от ее имени
 queue_high = Queue('high', connection=redis_q)
@@ -35,7 +36,6 @@ queue_low = Queue('low', connection=redis_q)
 queues = (queue_high, queue_default, queue_low)
 
 # 6. Запустить worker и подписать его на канал в Redis
-
 # терминал из папки с проектом, предполагаю так воркер находит канал redis_q
 # for (MacOS users + requests lib + rq) put in a terminal:
 #   export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES

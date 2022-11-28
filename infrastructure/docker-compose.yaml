@@ -1,0 +1,42 @@
+version: "3.9"
+
+services:
+
+  redis:
+    image: redis:6.2.7
+    container_name: redis
+
+  rq-demo:
+    build:
+      context: ../rq_demo
+      dockerfile: ./Dockerfile
+    image: rq-demo:latest
+    container_name: rq-demo
+    restart: always
+    volumes:
+      - ../rq_demo:/rq-demo
+    ports:
+      - 5000:5000
+
+  rq-worker:
+    build:
+      context: ../rq_demo
+      dockerfile: ./Dockerfile
+    image: rq-demo:latest
+    container_name: rq-worker
+    restart: always
+    command: sh -c "poetry run rq worker high default low --with-scheduler --url redis://redis:6379"
+    depends_on:
+      - rq-demo
+      - redis
+
+  rq-dashboard:
+    # https://pypi.org/project/rq-dashboard/0.6.1/
+    image: eoranged/rq-dashboard
+    environment:
+     - RQ_DASHBOARD_REDIS_URL=redis://redis:6379
+    restart: always
+    depends_on:
+      - redis
+    ports:
+      - 9181:9181
